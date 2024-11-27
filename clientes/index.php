@@ -16,6 +16,11 @@
   <!-- Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <title>Clientes</title>
+  <style>
+      body {
+          background-color: #d5f5e3; /* Color de fondo */
+      }
+  </style>
 </head>
 <body>
     <div class="container mt-4">
