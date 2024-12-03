@@ -1,9 +1,9 @@
 <?php
-require_once '../config/database.php';
-require_once 'funciones.php';
+    require_once '../config/database.php';
+    require_once 'funciones.php';
 
-$productoController = new ProductoController();
-$productos = $productoController->listarProductos();
+    $productoController = new ProductoController();
+    $productos = $productoController->listarProductos();
 ?>
 
 <!DOCTYPE html>
@@ -11,13 +11,9 @@ $productos = $productoController->listarProductos();
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <title>Productos</title>
-  <style>
-      body {
-          background-color: #d5f5e3; /* Color de fondo */
-      }
-  </style>
 </head>
 <body>
     <div class="container mt-4">
@@ -30,7 +26,7 @@ $productos = $productoController->listarProductos();
 
         <div class="row mb-3">
             <div class="col">
-                <h1>Gestión Productos</h1>
+                <h1>Gestión de Productos</h1>
             </div>
             <div class="col text-end">
                 <a href="nuevo.php" class="btn btn-primary">Nuevo Producto</a>
@@ -40,36 +36,37 @@ $productos = $productoController->listarProductos();
         <table class="table table-striped table-bordered -table-hover table-condensed">
             <thead>
                 <tr>
-                    <th>Id</th>
-                    <th>Nombre</th>
-                    <th>Precio</th>
-                    <th>Descripción</th>
-                    <th>Categoría</th>
-                    <th>Disponible</th>
-                    <th>Acciones</th>
+                <th>Nombre</th>
+                <th>Precio</th>
+                <th>Categoría</th>
+                <th>Descripción</th>
+                <th>Disponible</th>
+                <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
             <?php foreach ($productos as $producto): ?>
                 <tr>
-                    <td><?php echo $producto->_id; ?></td>
                     <td><?php echo $producto->nombre; ?></td>
-                    <td><?php echo $producto->precio; ?></td>
-                    <td><?php echo $producto->descripcion; ?></td>
+                    <td>$<?php echo number_format($producto->precio, 2); ?></td>
                     <td><?php echo $producto->categoria; ?></td>
-                    <td><?php echo $producto->disponible ? 'Sí' : 'No'; ?></td>
+                    <td><?php echo substr($producto->descripcion, 0, 50) . '...'; ?></td>
                     <td>
-                        <a href="editar.php?id=<?php echo $producto->_id; ?>" class="btn btn-warning">Editar</a>
-                        <a href="funciones.php?action=eliminar&id=<?php echo $producto->_id ?>" 
+                        <?php echo $producto->disponible ? 'Si':'No'; ?>
+                    </td>
+                    <td>
+                        <a href="editar.php?id=<?PHP echo $producto->_id; ?>" class="btn btn-warning">Editar</a>
+                        <a href="funciones.php?action=eliminar&id=<?PHP echo $producto->_id ?>" 
                             class="btn btn-danger"
                             onclick="return confirm('¿Está seguro de eliminar este producto?')">
                         Eliminar
                         </a>
                     </td>
                 </tr>
-            <?php endforeach; ?>
+            <?PHP endforeach;  ?>
             </tbody>
         </table>
+
     </div>
 </body>
 </html>

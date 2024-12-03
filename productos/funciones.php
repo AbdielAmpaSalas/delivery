@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../config/database.php';
 
-class ProductoController {
+class productoController {
     private $db;
     private $collection;
 
