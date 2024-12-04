@@ -60,5 +60,14 @@ use MongoDB\Collection;
                 return [];
             }
         }
+
+        public function crearpedidos($datos): void{
+            try{
+                $productos = $this->procesarProductos($datos['productos']);
+            } catch (Exception $e){
+                throw new Exception("Error al crear el pedido", $e->getMessage());
+                
+            }
+        }
     }
 ?>

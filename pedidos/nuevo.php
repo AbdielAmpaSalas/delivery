@@ -31,10 +31,48 @@
                         'notas' => $_POST['notas']
                     ];
                 }
+            }
+        }
+        // Eliminar producto de la variable session
+        if(isset($_POST['eliminar_producto'])){
+            $indice = $_POST['index'];
+            if (isset($_SESSION['productos_pedido'][$indice])){
+                unset($_SESSION['productos_pedido'][$indice]);
+                $_SESSION['productos_pedido'] = array_values($_SESSION['productos_pedido']);
+            }
+        }
+
+        // Agregar Pedido
+        if (isset($_POST['crear_pedido'])){
+            // verificamos que el array de productos no este vacio
+            if(empty($_SESSION['productos_pedido'])){
+                throw new Exception( "Debe agregar al menos un producto al pedido");
+            }else{
+                $datospedido = [
+                    'id_cliente' => $_POST['id_cliente'],
+                    'productos' => array_map(function($item){
+
+                        return [
+                        'id_prodcuto' => $item['id_producto'],
+                        'cantidad' => $item['cantidad'],
+                        'notas' => $item['notas']
+                        ];
+                    },$_SESSION['productos_pedido']),
+                    'direccion_entrega' => $_POST['direccion_entrega'],
+                    'metodo_pago' => $_POST['metodo_pago'],
+                    'estado_pago' => $_POST['estado_pago'],
+                ];
+
+                // Guardamos los datos
+                $pedidosController->crearPedido($datospedido);
 
             }
         }
+
     }
+
+    
+
 
     // Obtener listas necesarias
     $productos = $productoController->listarProductos();
@@ -61,6 +99,7 @@
 
         <h1>Nuevo Pedido</h1>
 
+        <!-- Formulario para agregar productos -->
         <div class="card mb-4">
             <div class="card-header">
                 <h4 class="card-title">Agregar Producto</h4>
@@ -127,7 +166,7 @@
                                 <td><?= number_format($item['precio'],2)*$item['cantidad'] ?></td>
                                 <td><?= $item['notas'] ?></td>
                                 <td>
-                                    <form>
+                                    <form method="POST" class="mb-3">
                                         <input type="hidden" name="index" value="<?= $index ?>">
                                         <button type="submit" name="eliminar_producto" class="btn btn-danger">
                                             Eliminar
@@ -140,6 +179,68 @@
                 </table>
             </div>
         </div>
+
+        <!-- Formulario final del pedido -->
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Datos del Pedido</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="row">
+                        <div class="col-6">
+                            <!-- Cliente -->
+                            <label class="form-label">Cliente</label>
+                            <select name="id_cliente" class="form-select" required>
+                                <option value="0">Seleccionar un cliente</option>
+                                <?PHP foreach($clientes as $cliente): ?>
+                                    <option value="<?= $cliente->_id ?>">
+                                        <?=  $cliente->nombre ?>
+                                    </option>
+                                <?PHP endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="col-6  mb-3"">
+                            <!-- Dirección de entrega -->
+                             <label class="form-*label">Diección de entrega</label>
+                             <textarea name="direccion_entrega" class="form-control" required>
+
+                             </textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6  mb-3"">
+                            <!-- Método de pago -->
+                            <label class="form-label">Método de Pago</label>
+                             <select name="metodo_pago" class="form-select" required>
+                                <option>Efectivo</option>
+                                <option>YAPE / Plin</option>
+                                <option>Tarjeta de Crédito</option>
+                                <option>Transferencia</option>
+                             </select>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <!-- Estado de entrega -->
+                            <label class="form-label">Estado del pago</label>
+                            <select name="estado_pago" class="form-select" required>
+                                <option>Pendiente</option>
+                                <option>Pagado</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- Boton Submit -->
+                     <div class="text-end">
+                        <a href="index.php" class="btn btn-danger">Cancelar</a>
+                        <button type="submit" name="crear_pedido" class="btn btn-primary">
+                            Crear Pedido
+                        </button>
+                     </div>
+                </form>
+            </div>
+
+        </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
